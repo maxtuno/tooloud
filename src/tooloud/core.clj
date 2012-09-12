@@ -31,7 +31,7 @@
 (def dub1 (dub-base-i))
 (def dub2 (dub-base-ii))
 
-(ctl dub2 :wobble 6)
+(ctl dub2 :wobble 3)
 (ctl dub2 :note 80)
 (ctl dub2 :note 40)
 
