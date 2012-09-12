@@ -1,15 +1,15 @@
 # tooloud
 
-I'm an app. Or maybe I'm a library? I haven't decided yet. 
+Live Coding Dubstep Performance
 
-The choice is up to you!
+https://vimeo.com/49207445
 
 ## Usage
 
-FIXME
+Overtone Clojure Eclipse Live Coding Dubstep Template
 
 ## License
 
-Copyright Â© 2012 FIXME
+Copyright © 2012, Oscar Riveros, Todos los derechos reservados.
 
 Distributed under the Eclipse Public License, the same as Clojure.
