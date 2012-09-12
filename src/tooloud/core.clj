@@ -6,15 +6,15 @@
 
 ;kit 1
 (def k1 (kicki))
-(def s1 (snare 140))
+(def s1 (snare :bpm 140))
 
 ;kit 2
 (def k2 (kickii))
-(def s2 (snare 280))
+(def s2 (snare :bpm 280))
 
-;kit 3
+;kit 3 (11!!!)
 (def k3 (kickiii))
-(def s3 (snare 560))
+(def s3 (snare :bpm 560))
 
 
 ;kills

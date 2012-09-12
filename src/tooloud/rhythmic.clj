@@ -1,11 +1,11 @@
 (ns tooloud.rhythmic
   (:use [overtone.live]))
 
-(defsynth kicki [bpm 140 kick-vol 3 v 2]
+(defsynth kickii [bpm 140 kick-vol 3 v 2]
    (let [kickenv (decay (t2a (demand (impulse:kr (/ bpm 30)) 0 (dseq [1 0 1 0 0 1 1 0 1 0 0 1 1 0 1 0] INF))) 0.7)
          kick (* (* kickenv 7) (sin-osc (+ 40 (* kickenv kickenv kickenv 200))))
          kick (clip2 kick 3)]
-
+     
    (out 0    (* v (clip2 (+ (* kick-vol kick)) 1)))))
 
 (defsynth kickii [bpm 140 kick-vol 3 v 2]
