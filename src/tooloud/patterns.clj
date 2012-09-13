@@ -2,7 +2,7 @@
   (:use [overtone.live]
         [tooloud.synthesizers]))
 
-(defn p
+(defn p 
   ([elements]
    (p elements (now)))
   ([[{:keys [synth vol pitch dur data]} & elements] t]
@@ -30,7 +30,7 @@
 (defn defnote
   [n-sym pitch]
   (intern *ns* n-sym
-          {:synth dub-base-i
+          {:synth dub-base-ii
            :vol 0.2
            :pitch pitch
            :dur 0.1
