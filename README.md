@@ -10,6 +10,4 @@ Overtone Clojure Eclipse Live Coding Dubstep Template
 
 ## License
 
-Copyright © 2012, Oscar Riveros, Todos los derechos reservados.
-
-Distributed under the Eclipse Public License, the same as Clojure.
+Copyright © 2012, Oscar Riveros, Distributed under the Eclipse Public License, the same as Clojure.
