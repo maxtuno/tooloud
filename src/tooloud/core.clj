@@ -4,7 +4,8 @@
         [tooloud.synthesizers]
         [tooloud.patterns]
         [tooloud.rhythmic]
-        [tooloud.fx])) 
+        [tooloud.fx]
+        [tooloud.samples])) 
 
 
 ;!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -21,15 +22,24 @@
 
 ;kit 1
 (def k1 (kicki :out-bus master))
-(def s1 (snare :out-bus master :bpm 140))
+(def s1 (snr :out-bus master :bpm 140))
 
 ;kit 2
 (def k2 (kickii :out-bus master))
-(def s2 (snare :out-bus master :bpm 280))
+(def s2 (snr :out-bus master :bpm 280))
+
+(kill k1)
+(kill k2)
+(kill k3)
+
+(kill s1)
+(kill s2)
+(kill s3)
+
 
 ;kit 3 (11!!!)
 (def k3 (kickiii :out-bus master))
-(def s3 (snare :out-bus master :bpm 560))
+(def s3 (snr :out-bus master :bpm 560))
 
 
 ;kills
@@ -41,6 +51,9 @@
 (kill s2)
 (kill s3)
     
+(def k3 (kickiii :out-bus master))
+(def s3 (snr :out-bus master :bpm 560))
+
 ;woobles
 
 (def dub1 (dub-base-i :out-bus master))
@@ -48,26 +61,29 @@
 (def fill (p (cycle (pattern derezzed 140))))
 (def dub2 (dub-base-ii :out-bus master))
 
-(ctl dub1 :wobble 3)
+(ctl dub1 :wobble 6)
 (ctl dub1 :note 71)
 (ctl dub1 :note 40)
 
 
-(ctl dub2 :wobble 6)
+(ctl dub2 :wobble 3)
 (ctl dub2 :note 70)
+(ctl dub2 :wobble 6)
 (ctl dub2 :note 40)
 
 
 ;kill woobles
 
-(kill dub1)
-(kill dub2)
+
 
 
 
 ;stop
 (stop)
 
+
+(kill dub1)
+(kill dub2)
 ; background
 (def base
   (demo 140
@@ -90,8 +106,8 @@
 (kill base)
 
 
-(def piecei   [:C4 :D#4 :G4])
-(def pieceii  [:C5 :D#5 :G5 :C5])
+(def piecei   [36 30 35 40 45 30 80 79 30 40 45 30 20 90])
+(def pieceii  [:C5 :D#5 :G5 :C5 :C4 :D#4 :G4])
 
 (defn player
   [t speed notes]
@@ -100,13 +116,45 @@
         t-next (+ t speed)]
     (when n
       (at t
+          (resonant-pad (note n)))
           (sampled-piano (note n)))
       (apply-at t-next #'player [t-next speed notes]))))
   
-(def num-notes 1000)
+(def num-notes 25)
 (do
-  (player (now) 560 (take num-notes (cycle piecei)))
-  (player (now) 280 (take num-notes (cycle pieceii))))
+  (player (now) 128 (take num-notes (cycle piecei)))
+  (player (now) 64 (take num-notes (cycle pieceii))))
+
+;stop all
+(stop)
+
+
+;Samples
+
+(def bar-dur (atom 1000))
+
+(play-rhythm patterns* bar-dur)
+
+(defn update-pat!
+  [key pat]
+  (swap! patterns* (fn [patterns key new-pat]
+                     (let [[samp pat] (get patterns key)]
+                       (assoc patterns key [samp new-pat])))
+         key pat))
+
+(update-pat! :clap  [[_ X]])
+(update-pat! :cy    [[_ X] [_ X]])
+;(update-pat! :bass  [[_] [X] [_ [_ _] _]])
+(update-pat! :snare [[_]])
+(update-pat! :hhos  [[X] [_ [X X X _]]])
+
+;stop drums
+(update-pat! :clap  [[_]])
+(update-pat! :cy    [[_]])
+(update-pat! :bass  [[_]])
+(update-pat! :snare [[_]])
+(update-pat! :hhos  [[_]])
+
 
 ;stop all
 (stop)

@@ -73,3 +73,6 @@
     (rlpf (* 0.3 (+ (square freq) (lf-tri (+ lfo (ugen-cents freq split)))))
           (+ (* 0.8 freq) (* f-env 2 freq)) 3/4)))
 
+(defsynth plop [freq 440 len 0.4]
+  (* 0.4 (env-gen (perc 0.02 len) 1 1 0 1 FREE)
+     (sin-osc [(+ (* 3 (sin-osc 20)) freq) (/ freq 2)])))

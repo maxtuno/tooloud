@@ -22,11 +22,11 @@
 
    (out out-bus    (* v (clip2 (+ (* kick-vol kick)) 1)))))
 
-(defsynth snare [out-bus 0 bpm 140 snare-vol 2 v 2]
- (let [snare (* 8 (pink-noise [1 1]) (apply + (* (decay (impulse (/ bpm 240) 0.5) [0.4 2]) [1 0.05])))
-       snare (+ snare (bpf (* 8 snare) 2000))
-       snare (clip2 snare 2)]
+(defsynth snr [out-bus 0 bpm 140 snare-vol 2 v 2]
+ (let [snr (* 8 (pink-noise [1 1]) (apply + (* (decay (impulse (/ bpm 240) 0.5) [0.4 2]) [1 0.05])))
+       snr (+ snr (bpf (* 8 snr) 2000))
+       snr (clip2 snr 2)]
 
-   (out out-bus    (* v (clip2 (+ (* snare-vol snare)) 1)))))
+   (out out-bus    (* v (clip2 (+ (* snare-vol snr)) 1)))))
 
 

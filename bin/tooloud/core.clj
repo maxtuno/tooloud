@@ -4,7 +4,8 @@
         [tooloud.synthesizers]
         [tooloud.patterns]
         [tooloud.rhythmic]
-        [tooloud.fx])) 
+        [tooloud.fx]
+        [tooloud.samples])) 
 
 
 ;!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -21,15 +22,15 @@
 
 ;kit 1
 (def k1 (kicki :out-bus master))
-(def s1 (snare :out-bus master :bpm 140))
+(def s1 (snr :out-bus master :bpm 140))
 
 ;kit 2
 (def k2 (kickii :out-bus master))
-(def s2 (snare :out-bus master :bpm 280))
+(def s2 (snr :out-bus master :bpm 280))
 
 ;kit 3 (11!!!)
 (def k3 (kickiii :out-bus master))
-(def s3 (snare :out-bus master :bpm 560))
+(def s3 (snr :out-bus master :bpm 560))
 
 
 ;kills
@@ -90,8 +91,8 @@
 (kill base)
 
 
-(def piecei   [:C4 :D#4 :G4])
-(def pieceii  [:C5 :D#5 :G5 :C5])
+(def piecei   [:C4 :D#4 :G4 :C5 :D#5 :G5 :C5])
+(def pieceii  [:C5 :D#5 :G5 :C5 :C4 :D#4 :G4])
 
 (defn player
   [t speed notes]
@@ -100,6 +101,7 @@
         t-next (+ t speed)]
     (when n
       (at t
+          (resonant-pad (note n))
           (sampled-piano (note n)))
       (apply-at t-next #'player [t-next speed notes]))))
   
@@ -107,6 +109,31 @@
 (do
   (player (now) 560 (take num-notes (cycle piecei)))
   (player (now) 280 (take num-notes (cycle pieceii))))
+
+(def bar-dur (atom 1000))
+
+(play-rhythm patterns* bar-dur)
+
+(defn update-pat!
+  [key pat]
+  (swap! patterns* (fn [patterns key new-pat]
+                     (let [[samp pat] (get patterns key)]
+                       (assoc patterns key [samp new-pat])))
+         key pat))
+
+(update-pat! :clap  [[_ X]])
+(update-pat! :cy    [[_ X] [_ X]])
+(update-pat! :bass  [[X]])
+(update-pat! :snare [[_] [X] [_ [X _] _]])
+(update-pat! :hhos  [[X] [_ [X X X _]]])
+
+;stop drums
+(update-pat! :clap  [[_]])
+(update-pat! :cy    [[_]])
+(update-pat! :bass  [[_]])
+(update-pat! :snare [[_]])
+(update-pat! :hhos  [[_]])
+
 
 ;stop all
 (stop)
