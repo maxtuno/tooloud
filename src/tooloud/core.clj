@@ -28,19 +28,10 @@
 (def k2 (kickii :out-bus master))
 (def s2 (snr :out-bus master :bpm 280))
 
-(kill k1)
-(kill k2)
-(kill k3)
-
-(kill s1)
-(kill s2)
-(kill s3)
-
 
 ;kit 3 (11!!!)
 (def k3 (kickiii :out-bus master))
 (def s3 (snr :out-bus master :bpm 560))
-
 
 ;kills
 (kill k1)
@@ -50,9 +41,6 @@
 (kill s1)
 (kill s2)
 (kill s3)
-    
-(def k3 (kickiii :out-bus master))
-(def s3 (snr :out-bus master :bpm 560))
 
 ;woobles
 
@@ -61,8 +49,9 @@
 (def fill (p (cycle (pattern derezzed 140))))
 (def dub2 (dub-base-ii :out-bus master))
 
+
 (ctl dub1 :wobble 6)
-(ctl dub1 :note 71)
+(ctl dub1 :note 80)
 (ctl dub1 :note 40)
 
 
@@ -71,19 +60,15 @@
 (ctl dub2 :wobble 6)
 (ctl dub2 :note 40)
 
-
-;kill woobles
-
-
-
-
-
 ;stop
 (stop)
 
+;kill dubs
 
 (kill dub1)
 (kill dub2)
+
+
 ; background
 (def base
   (demo 140
@@ -102,8 +87,34 @@
 
        (out master (+ wob) 1))))
 
+; Backgraund Mouse Wooble
+(def base-mouse
+  (demo 140
+      (let [bpm 140
+       notes [(mouse-x:kr 30 40) (mouse-y:kr 40 70) 30 40 70 80]
+       trig (impulse:kr (/ bpm 140))
+       freq (midicps (lag (demand trig 0 notes) 0.25))
+       swr (demand trig 0 (dxrand [(mouse-x:kr 1 6) (mouse-y:kr 6 12)] INF))
+       sweep (lin-exp (lf-tri swr) -1 1 notes 3000)
+       wob (apply + (saw (* freq [(mouse-x:kr 0.8 0.9) (mouse-y:kr 1 1.1)])))
+       wob (lpf wob sweep)
+       wob (* 1 (normalizer wob))
+       wob (+ wob (bpf wob 1500 2))
+       wob (+ wob (* 0.2 (g-verb wob 9 0.7 0.7)))
+       
+       kickenv (decay (t2a (demand (impulse:kr (/ bpm 30)) 0 (dseq [[1 0 0 1 0 0 1 0 1 0 0 1 0 0 0 0] [1 0 0 1 0 0 1 0 1 0 0 1 0 0 10 0] [1 0 0 0 0 0 1 0 1 1 0 1 0 0 0 0] [1 0 0 1 0 0 1 0 1 0 0 1 0 0 1 1]] INF))) 0.7)
+       kick (* (* kickenv 7) (sin-osc (+ 40 (* kickenv kickenv kickenv 200))))
+       kick (clip2 kick 3)
+
+       snare (* 3 (pink-noise [1 1]) (apply + (* (decay (impulse (/ bpm 240) 0.5) [0.4 2]) [1 0.05])))
+       snare (+ snare (bpf (* 4 snare) 2000))
+       snare (clip2 snare 3)]
+
+   (out master (pan2 (+ wob kick snare) 2)))))
+
 ;kill background
 (kill base)
+(kill base-mouse)
 
 
 (def piecei   [36 30 35 40 45 30 80 79 30 40 45 30 20 90])
@@ -118,7 +129,7 @@
       (at t
           (resonant-pad (note n)))
           (sampled-piano (note n)))
-      (apply-at t-next #'player [t-next speed notes]))))
+      (apply-at t-next #'player [t-next speed notes])))
   
 (def num-notes 25)
 (do
